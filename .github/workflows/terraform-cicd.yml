@@ -53,9 +53,9 @@ jobs:
         run: tflint
         working-directory: new-tr/root
 
-          # =========================
-          # tfsec Security Scan
-          # =========================
+         # =========================
+# tfsec Security Scan
+# =========================
 
       - name: Run tfsec Security Scan
         uses: tfsec/tfsec-sarif-action@master
@@ -65,4 +65,13 @@ jobs:
           tfsec_args: >
             --minimum-severity HIGH
 
-        
+# =========================
+# Upload SARIF to GitHub Security
+# =========================
+
+      - name: Upload tfsec SARIF Report
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: tfsec.sarif
+          category: tfsec
