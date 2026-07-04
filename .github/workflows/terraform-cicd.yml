@@ -44,9 +44,11 @@ jobs:
 
       - name: Install TFLint
         uses: terraform-linters/setup-tflint@v4
-          
+
       - name: Initialize TFLint
         run: tflint --init
-          
+        working-directory: new-tr/root
+
       - name: Run TFLint
         run: tflint
+        working-directory: new-tr/root
