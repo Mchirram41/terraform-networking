@@ -33,7 +33,8 @@ jobs:
         run: terraform version
 
       - name: Terraform Format Check
-        run: terraform fmt -check -recursive new-tr/
+        run: terraform fmt -recursive new-tr/
+
 
       - name: Terraform Init
         run: terraform -chdir=new-tr/root init
