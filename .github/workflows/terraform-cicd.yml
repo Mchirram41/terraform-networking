@@ -70,9 +70,9 @@ jobs:
 # Upload SARIF to GitHub Security
 # =========================
 
-      - name: Upload tfsec SARIF Report
+      - name: Upload tfsec SARIF Artifact
         if: always()
-        uses: github/codeql-action/upload-sarif@v4
+        uses: actions/upload-artifact@v4
         with:
-          sarif_file: tfsec.sarif
-          category: tfsec
+          name: tfsec-sarif-report
+          path: tfsec.sarif
