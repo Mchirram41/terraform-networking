@@ -37,12 +37,24 @@ variable "allowed_cidr" {
   type = list(string)
 }
 
+############## rds
 
-variable "identifier" {}
+variable "identifier" {
+  type = string
+}
 
-variable "db_name" {}
-variable "username" {}
-variable "password" {}
+variable "db_name" {
+  type = string
+}
+
+variable "username" {
+  type = string
+}
+
+variable "password" {
+  type      = string
+  sensitive = true
+}
 
 variable "multi_az" {
   type    = bool
