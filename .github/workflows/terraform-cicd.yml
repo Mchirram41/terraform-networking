@@ -61,6 +61,7 @@ jobs:
           sarif_file: tfsec.sarif
           tfsec_args: >
             --minimum-severity HIGH
+            --tfvars-file=terraform.tfvars
 
       - name: Upload tfsec SARIF Artifact
         if: always()
