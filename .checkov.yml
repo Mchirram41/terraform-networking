@@ -1,0 +1,12 @@
+framework:
+  - terraform
+
+download-external-modules: true
+
+quiet: true
+
+soft-fail: false
+
+output:
+  - sarif
+  - json
