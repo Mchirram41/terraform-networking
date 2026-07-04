@@ -100,10 +100,9 @@ module "nat_gateway" {
 # ------------------------
 
 module "rds" {
-  source = "../networking/modules/RDS"
- resource_name = local.resource_name
+  source        = "../networking/modules/RDS"
+  resource_name = local.resource_name
   tags          = local.common_tags
-
 
   identifier = var.identifier
 
@@ -118,13 +117,10 @@ module "rds" {
   # existing security group from VPC/app layer
   allowed_security_group_id = module.security_group.security_group_id
 
-  multi_az = var.multi_az
-  project_name       = var.project_name
-  environment    = var.environment
-  
-
+  multi_az         = var.multi_az
+  project_name     = var.project_name
+  environment      = var.environment
 }
-
 ################ eks 
 
 module "eks" {
