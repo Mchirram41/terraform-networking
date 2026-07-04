@@ -53,8 +53,7 @@ jobs:
       - name: Run TFLint
         run: tflint
         working-directory: new-tr/root
-=
-
+        
       - name: Run tfsec Security Scan
         uses: tfsec/tfsec-sarif-action@master
         with:
