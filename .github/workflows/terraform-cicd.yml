@@ -76,3 +76,41 @@ jobs:
         with:
           name: tfsec-sarif-report
           path: tfsec.sarif
+
+
+          # ======================================================
+# Checkov - Infrastructure Security & Compliance Scan
+# ======================================================
+
+      - name: Run Checkov Security Scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: new-tr/root
+          framework: terraform
+          quiet: true
+          soft_fail: false
+          output_format: sarif,json
+          output_file_path: checkov.sarif,checkov.json
+
+# ======================================================
+# Upload Checkov SARIF to GitHub Code Scanning
+# ======================================================
+
+      - name: Upload Checkov SARIF Report
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: checkov.sarif
+
+# ======================================================
+# Upload Checkov Reports as Artifacts
+# ======================================================
+
+      - name: Upload Checkov Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkov-security-report
+          path: |
+            checkov.sarif
+            checkov.json
