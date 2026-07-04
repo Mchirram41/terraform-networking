@@ -52,3 +52,17 @@ jobs:
       - name: Run TFLint
         run: tflint
         working-directory: new-tr/root
+
+          # =========================
+          # tfsec Security Scan
+          # =========================
+
+      - name: Run tfsec Security Scan
+        uses: tfsec/tfsec-sarif-action@master
+        with:
+          working_directory: new-tr/root
+          sarif_file: tfsec.sarif
+          tfsec_args: >
+            --minimum-severity HIGH
+
+        
