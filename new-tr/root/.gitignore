@@ -24,7 +24,7 @@ override.tf.json
 *_override.tf.json
 
 # Variable files containing secrets
-terraform.tfvars
+# terraform.tfvars        # Comment this out if your tfvars don't have secrets
 terraform.tfvars.json
 *.auto.tfvars
 
@@ -32,29 +32,4 @@ terraform.tfvars.json
 .terraformrc
 terraform.rc
 
-# ==========================
-# Environment files
-# ==========================
-
-.env
-.env.*
-
-# ==========================
-# IDE Files
-# ==========================
-
-.vscode/
-.idea/
-
-# ==========================
-# Operating System Files
-# ==========================
-
-.DS_Store
-Thumbs.db
-
-# ==========================
-# Logs
-# ==========================
-
-*.log
+# ... rest of file
