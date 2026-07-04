@@ -53,10 +53,7 @@ jobs:
       - name: Run TFLint
         run: tflint
         working-directory: new-tr/root
-
-         # =========================
-# tfsec Security Scan
-# =========================
+=
 
       - name: Run tfsec Security Scan
         uses: tfsec/tfsec-sarif-action@master
@@ -66,21 +63,12 @@ jobs:
           tfsec_args: >
             --minimum-severity HIGH
 
-# =========================
-# Upload SARIF to GitHub Security
-# =========================
-
       - name: Upload tfsec SARIF Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tfsec-sarif-report
           path: tfsec.sarif
-
-
-          # ======================================================
-# Checkov - Infrastructure Security & Compliance Scan
-# ======================================================
 
       - name: Run Checkov Security Scan
         uses: bridgecrewio/checkov-action@v12
@@ -92,19 +80,11 @@ jobs:
           output_format: sarif,json
           output_file_path: checkov.sarif,checkov.json
 
-# ======================================================
-# Upload Checkov SARIF to GitHub Code Scanning
-# ======================================================
-
       - name: Upload Checkov SARIF Report
         if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: checkov.sarif
-
-# ======================================================
-# Upload Checkov Reports as Artifacts
-# ======================================================
 
       - name: Upload Checkov Reports
         if: always()
