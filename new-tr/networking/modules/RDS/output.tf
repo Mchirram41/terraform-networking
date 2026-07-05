@@ -1,15 +1,24 @@
 output "rds_endpoint" {
-  value = aws_db_instance.this.endpoint
+  description = "RDS instance endpoint"
+  value       = aws_db_instance.this.endpoint
 }
 
 output "rds_id" {
-  value = aws_db_instance.this.id
+  description = "RDS instance identifier"
+  value       = aws_db_instance.this.id
 }
 
 output "rds_subnet_group" {
-  value = aws_db_subnet_group.this.name
+  description = "DB subnet group name"
+  value       = aws_db_subnet_group.this.name
 }
 
-variable "resource_name" {
-  type = string
+output "rds_port" {
+  description = "RDS instance port"
+  value       = aws_db_instance.this.port
+}
+
+output "rds_address" {
+  description = "RDS instance address"
+  value       = aws_db_instance.this.address
 }
