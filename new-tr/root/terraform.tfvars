@@ -76,27 +76,27 @@ multi_az = true
 
 ##################  eks 
 
-cluster_version = "1.33"
-
-node_groups = {
-
-  workers = {
-
-    instance_types = ["t3.medium"]
-
-    capacity_type = "ON_DEMAND"
-
-    scaling_config = {
-
-      desired_size = 2
-      min_size     = 2
-      max_size     = 4
-
-    }
-
-  }
-
-}
+# cluster_version = "1.33"
+#
+# node_groups = {
+#
+#   workers = {
+#
+#     instance_types = ["t3.medium"]
+#
+#     capacity_type = "ON_DEMAND"
+#
+#     scaling_config = {
+#
+#       desired_size = 2
+#       min_size     = 2
+#       max_size     = 4
+#
+#     }
+#
+#   }
+#
+# }
 
 
 project_name = "mahesh-app"
