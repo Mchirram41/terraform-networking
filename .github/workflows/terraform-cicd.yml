@@ -71,25 +71,16 @@ jobs:
           name: tfsec-sarif-report
           path: new-tr/root/tfsec.sarif
 
-      # ----------------------------
-      # Install Python
-      # ----------------------------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # ----------------------------
-      # Install Checkov
-      # ----------------------------
       - name: Install Checkov
         run: |
           python -m pip install --upgrade pip
           pip install checkov
 
-      # ----------------------------
-      # Run Checkov (No Docker)
-      # ----------------------------
       - name: Run Checkov Security Scan
         run: |
           checkov \
@@ -116,21 +107,54 @@ jobs:
             new-tr/root/results.sarif
             new-tr/root/results.json
 
-      # ----------------------------
-      # Terraform Plan
-      # ----------------------------
       - name: Terraform Plan
         run: |
           terraform -chdir=new-tr/root plan \
             -var-file=terraform.tfvars \
             -out=tfplan
 
-      # ----------------------------
-      # Upload Terraform Plan
-      # ----------------------------
       - name: Upload Terraform Plan
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
           path: new-tr/root/tfplan
+
+  deploy:
+    name: Terraform Apply
+    needs: terraform
+    runs-on: ubuntu-latest
+
+    environment:
+      name: Production
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::998230061098:role/GitHubActionsTerraformRole
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan
+          path: new-tr/root
+
+      - name: Terraform Init
+        run: terraform -chdir=new-tr/root init
+
+      - name: Terraform Apply
+        run: terraform -chdir=new-tr/root apply tfplan
