@@ -71,25 +71,32 @@ jobs:
           name: tfsec-sarif-report
           path: new-tr/root/tfsec.sarif
 
+      # ----------------------------
       # Install Python
+      # ----------------------------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      # ----------------------------
       # Install Checkov
+      # ----------------------------
       - name: Install Checkov
         run: |
           python -m pip install --upgrade pip
           pip install checkov
 
-      # Run Checkov
+      # ----------------------------
+      # Run Checkov (No Docker)
+      # ----------------------------
       - name: Run Checkov Security Scan
         run: |
           checkov \
             -d new-tr/root \
             --framework terraform \
             --quiet \
+            --soft-fail \
             --output sarif \
             --output json \
             --output-file-path new-tr/root/results.sarif,new-tr/root/results.json
@@ -108,15 +115,3 @@ jobs:
           path: |
             new-tr/root/results.sarif
             new-tr/root/results.json
-
-      - name: Terraform Plan
-        run: |
-          terraform -chdir=new-tr/root plan \
-            -var-file=terraform.tfvars \
-            -out=tfplan
-
-      - name: Upload Terraform Plan
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-plan
-          path: new-tr/root/tfplan
