@@ -63,25 +63,25 @@ variable "multi_az" {
 
 ################ eks
 
-variable "cluster_version" {
-  description = "Kubernetes Version"
-  type        = string
-}
-
-variable "node_groups" {
-  description = "Managed Node Groups"
-
-  type = map(object({
-    instance_types = list(string)
-    capacity_type  = string
-
-    scaling_config = object({
-      desired_size = number
-      min_size     = number
-      max_size     = number
-    })
-  }))
-}
+# variable "cluster_version" {
+#   description = "Kubernetes Version"
+#   type        = string
+# }
+#
+# variable "node_groups" {
+#   description = "Managed Node Groups"
+#
+#   type = map(object({
+#     instance_types = list(string)
+#     capacity_type  = string
+#
+#     scaling_config = object({
+#       desired_size = number
+#       min_size     = number
+#       max_size     = number
+#     })
+#   }))
+# }
 
 
 
