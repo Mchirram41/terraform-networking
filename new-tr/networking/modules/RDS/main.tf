@@ -2,8 +2,9 @@
 # DB SUBNET GROUP
 # -------------------------
 resource "aws_db_subnet_group" "this" {
-  name       = "${var.identifier}-subnet-group"
-  subnet_ids = var.subnet_ids
+  # Use name_prefix so AWS appends a unique suffix and avoids name collisions
+  name_prefix = "${var.identifier}-subnet-group-"
+  subnet_ids  = var.subnet_ids
 
   tags = {
     Name = "${var.identifier}-subnet-group"
