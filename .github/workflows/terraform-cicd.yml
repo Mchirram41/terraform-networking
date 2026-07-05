@@ -96,7 +96,7 @@ jobs:
             -d new-tr/root \
             --framework terraform \
             --quiet \
-            --soft-fail false \
+            --soft-fail \
             --output sarif \
             --output json \
             --output-file-path new-tr/root/results.sarif,new-tr/root/results.json
