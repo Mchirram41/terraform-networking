@@ -21,7 +21,7 @@ jobs:
       - name: Configure AWS Credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume:      arn:aws:iam::998230061098:role/GitHubActionsTerraformRole
+          role-to-assume: arn:aws:iam::998230061098:role/GitHubActionsTerraformRole
           aws-region: us-east-1
 
       - name: Setup Terraform
@@ -45,12 +45,12 @@ jobs:
         uses: terraform-linters/setup-tflint@v4
 
       - name: Initialize TFLint
-        run: tflint --init
         working-directory: new-tr/root
+        run: tflint --init
 
       - name: Run TFLint
-        run: tflint
         working-directory: new-tr/root
+        run: tflint
 
       - name: Run tfsec Security Scan
         uses: tfsec/tfsec-sarif-action@master
@@ -71,15 +71,35 @@ jobs:
           name: tfsec-sarif-report
           path: new-tr/root/tfsec.sarif
 
-      - name: Run Checkov Security Scan
-        uses: bridgecrewio/checkov-action@v12
+      # ----------------------------
+      # Install Python
+      # ----------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          directory: new-tr/root
-          framework: terraform
-          quiet: true
-          soft_fail: false
-          output_format: sarif,json
-          output_file_path: new-tr/root/results.sarif,new-tr/root/results.json
+          python-version: "3.11"
+
+      # ----------------------------
+      # Install Checkov
+      # ----------------------------
+      - name: Install Checkov
+        run: |
+          python -m pip install --upgrade pip
+          pip install checkov
+
+      # ----------------------------
+      # Run Checkov (No Docker)
+      # ----------------------------
+      - name: Run Checkov Security Scan
+        run: |
+          checkov \
+            -d new-tr/root \
+            --framework terraform \
+            --quiet \
+            --soft-fail false \
+            --output sarif \
+            --output json \
+            --output-file-path new-tr/root/results.sarif,new-tr/root/results.json
 
       - name: Upload Checkov SARIF Report
         if: always()
