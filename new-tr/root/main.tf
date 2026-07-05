@@ -121,22 +121,20 @@ module "rds" {
   project_name     = var.project_name
   environment      = var.environment
 }
-################ eks 
+################ EKS ################
 
-module "eks" {
-  source = "../networking/modules/eks"
-  resource_name = local.resource_name
-  tags          = local.common_tags
-
-
-  # Pass outputs from networking
-  vpc_id            = module.vpc.vpc_id
-  subnet_ids = module.private_subnet.private_subnet_ids
-  # Pass EKS variables
-
-  cluster_version = var.cluster_version
-  node_groups     = var.node_groups
-  project_name = var.project_name
-  environment    = var.environment
-
-} 
+# module "eks" {
+#   source = "../networking/modules/eks"
+#   resource_name = local.resource_name
+#   tags          = local.common_tags
+#
+#   # Pass outputs from networking
+#   vpc_id     = module.vpc.vpc_id
+#   subnet_ids = module.private_subnet.private_subnet_ids
+#
+#   # Pass EKS variables
+#   cluster_version = var.cluster_version
+#   node_groups     = var.node_groups
+#   project_name    = var.project_name
+#   environment     = var.environment
+# }
