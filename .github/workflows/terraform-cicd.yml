@@ -21,7 +21,7 @@ jobs:
       - name: Configure AWS Credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::998230061098:role/GitHubActionsTerraformRole
+          role-to-assume:      arn:aws:iam::998230061098:role/GitHubActionsTerraformRole
           aws-region: us-east-1
 
       - name: Setup Terraform
@@ -34,7 +34,6 @@ jobs:
 
       - name: Terraform Format Check
         run: terraform fmt -recursive new-tr/
-
 
       - name: Terraform Init
         run: terraform -chdir=new-tr/root init
@@ -52,23 +51,25 @@ jobs:
       - name: Run TFLint
         run: tflint
         working-directory: new-tr/root
-        
+
       - name: Run tfsec Security Scan
         uses: tfsec/tfsec-sarif-action@master
         with:
-            working_directory: new-tr/root
-            sarif_file: tfsec.sarif
-            tfsec_args: >
-              --minimum-severity low
-              --tfvars-file terraform.tfvars
+          working_directory: new-tr/root
+          sarif_file: new-tr/root/tfsec.sarif
+          tfsec_args: >
+            --minimum-severity low
+            --tfvars-file new-tr/root/terraform.tfvars
 
+      - name: List module directory (diagnostic)
+        run: ls -la new-tr/root || true
 
       - name: Upload tfsec SARIF Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: tfsec-sarif-report
-          path: tfsec.sarif
+          path: new-tr/root/tfsec.sarif
 
       - name: Run Checkov Security Scan
         uses: bridgecrewio/checkov-action@v12
@@ -78,13 +79,13 @@ jobs:
           quiet: true
           soft_fail: false
           output_format: sarif,json
-          output_file_path: results.sarif,results.json
+          output_file_path: new-tr/root/results.sarif,new-tr/root/results.json
 
       - name: Upload Checkov SARIF Report
         if: always()
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: results.sarif
+          sarif_file: new-tr/root/results.sarif
 
       - name: Upload Checkov Reports
         if: always()
@@ -92,5 +93,5 @@ jobs:
         with:
           name: checkov-security-report
           path: |
-            results.sarif
-            results.json
+            new-tr/root/results.sarif
+            new-tr/root/results.json
