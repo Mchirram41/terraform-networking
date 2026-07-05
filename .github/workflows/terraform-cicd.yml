@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Choose action'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+          - apply
+          - destroy
 
 permissions:
   id-token: write
@@ -124,9 +134,11 @@ jobs:
     name: Terraform Apply
     needs: terraform
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply')
 
     environment:
       name: Production
+      url: https://console.aws.amazon.com
 
     permissions:
       id-token: write
@@ -158,3 +170,37 @@ jobs:
 
       - name: Terraform Apply
         run: terraform -chdir=new-tr/root apply tfplan
+
+  destroy:
+    name: Terraform Destroy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
+
+    environment:
+      name: Production
+      url: https://console.aws.amazon.com
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::998230061098:role/GitHubActionsTerraformRole
+          aws-region: us-east-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.5
+
+      - name: Terraform Init
+        run: terraform -chdir=new-tr/root init
+
+      - name: Terraform Destroy
+        run: terraform -chdir=new-tr/root destroy -auto-approve -var-file=terraform.tfvars
